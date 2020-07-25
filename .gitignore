@@ -6,6 +6,7 @@ node_modules
 
 # Ignore files relared to API Keys
 .env
+credentials.cfg
 
 # Ignore SASS config files
 .sass-cache

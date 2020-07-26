@@ -1,4 +1,4 @@
-from initialize import con
+from initialize import initialize_connection as con
 
 
 class Period:
@@ -35,4 +35,3 @@ def ohlcv(ticker, period=interval.oneMinute, ticks=50):
     df.drop(df.columns[[0, 1, 2, 3, 4, 5, 6, 7]], axis=1, inplace=True)
     df.rename(columns={'tickqty': 'vol'}, inplace=True)
     return df
-

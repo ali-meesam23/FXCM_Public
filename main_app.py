@@ -35,7 +35,7 @@ while activation_condition==True:
     account = con.get_accounts()
     balance = account.balance
     positions = con.get_open_positions()
-    perc_total_balance = 0.9
+    perc_total_balance = 1
 
 
     for ticker in tickers:
@@ -99,7 +99,8 @@ while activation_condition==True:
             print(f"CLOSING POSITION for {ticker}")
         else:
             print(f"No new positions open for {ticker}...")
-
+            
+    activation_condition = ((s_time < now) and (now < e_time))
     if activation_condition==True:
         print()
         print(f"Current PnL: {round(con.get_accounts().dayPL.iloc[0],0)}")

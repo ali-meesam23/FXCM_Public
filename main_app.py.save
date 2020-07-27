@@ -19,17 +19,17 @@ tickers = {
 
 # trading time
 s_time = datetime.time(23)
-e_time = datetime.time(23,30)
+e_time = datetime.time()
 now = datetime.datetime.now().time()
 
 # Trading interval
-trade_interval = interval.oneMinute
+trade_interval = interval.fiveMinute
 
 # Activating the algorithm for the active time range
 activation_condition = s_time<=now and now<=e_time
 manual = False
 
-# ===========================================================
+,# ===========================================================
 
 while activation_condition or manual:
 

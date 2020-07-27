@@ -40,7 +40,7 @@ order = con.open_trade(symbol='USD/CAD', is_buy=False,
                        stop=-9, trailing_step =True,
                        order_type='AtMarket', limit=9)
 
-con.close_trade(trade_id=tradeId, amount=1000)
+# con.close_trade(trade_id=tradeId, amount=1000)
 con.close_all_for_symbol('USD/CAD')
 
 #closing connection

@@ -19,12 +19,12 @@ tickers = {
 
 # trading time
 s_time = datetime.time(23)
-e_time = datetime.time(23,30)
+e_time = datetime.time(23,40)
 now = datetime.datetime.now().time()
 
 # Trading interval
 trade_interval = interval.oneMinute
-
+trade_interval_refresh = 60 * 1
 # Activating the algorithm for the active time range
 activation_condition = s_time<=now and now<=e_time
 manual = False
@@ -41,7 +41,7 @@ while activation_condition or manual:
 
     for ticker in tickers:
         # ======= Getting data ===========
-        df = ohlcv(ticker,interval.fifteenMinute)
+        df = ohlcv(ticker,trade_interval)
         
         # ======== Position sizing ========
         con.subscribe_market_data(ticker)
@@ -50,6 +50,10 @@ while activation_condition or manual:
         total_borrow_amount = ((perc_total_balance*balance.iloc[0]/len(tickers))*tickers[ticker])
         # Order amount
         order_amount = round(total_borrow_amount/price,0)
+        
+        if (len(ticker)==7) and (ticker!="XAU/USD"):
+            order_amount = order_amount/1000    
+        
         if order_amount==0:
             order_amount += 1
         # =================================
@@ -100,7 +104,7 @@ while activation_condition or manual:
     if activation_condition==True:
         print()
         print(f"Current PnL: {round(con.get_accounts().dayPL.iloc[0],0)}")
-        time.sleep(trade_interval)
+        time.sleep(trade_interval_refresh)
 
 print("Trading session over....")
 print("_________________________")

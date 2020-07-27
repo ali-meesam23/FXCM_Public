@@ -31,7 +31,7 @@ manual = False
 
 # ===========================================================
 
-while activation_condition or manual:
+while activation_condition==True or manual==True:
 
     account = con.get_accounts()
     balance = account.balance

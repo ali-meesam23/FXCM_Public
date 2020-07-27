@@ -18,25 +18,24 @@ tickers = {
 }
 
 # trading time
-s_time = datetime.time(23)
-e_time = datetime.time(23,40)
+s_time = datetime.time(6,30)
+e_time = datetime.time(16)
 now = datetime.datetime.now().time()
 
 # Trading interval
 trade_interval = interval.oneMinute
 trade_interval_refresh = 60 * 1
 # Activating the algorithm for the active time range
-activation_condition = s_time<=now and now<=e_time
-manual = False
+activation_condition = ((s_time < now) and (now < e_time))
 
 # ===========================================================
 
-while activation_condition==True or manual==True:
+while activation_condition==True:
 
     account = con.get_accounts()
     balance = account.balance
     positions = con.get_open_positions()
-    perc_total_balance = 0.7
+    perc_total_balance = 0.9
 
 
     for ticker in tickers:
@@ -110,8 +109,15 @@ print("Trading session over....")
 print("_________________________")
 print("Closing All Trades")
 
-for ticker in tickers:
-    con.close_all_for_symbol(ticker)
-    print(f"Closed trade for {ticker}...")
+active_pos = con.get_open_positions()
+if len(active_pos)>0:
+    for ticker in tickers:
+        try:
+            con.close_all_for_symbol(ticker)
+            print(f"Closed trade for {ticker}...")
+        except:
+            print(f"No position available for {ticker}")
+else:
+    print('No Positions to Close')
 
 con.close()

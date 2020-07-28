@@ -32,7 +32,7 @@ def slope(df,col,n):
     df = df.copy()
     ser = df[col]
     slp = []
-    for i,x in enumerate(ser):
+    for i, x in enumerate(ser):
         if i < n:
             slp.append(0)
             continue

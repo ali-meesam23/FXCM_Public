@@ -1,4 +1,3 @@
-from ohlcv import ohlcv, interval
 from Indicators import vwap_slope, o_c
 
 import pandas as pd

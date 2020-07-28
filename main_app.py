@@ -5,6 +5,7 @@ from Signal import signal
 # Basic Imports
 import datetime
 import time
+import sqlite3
 # =====================imput parameters=====================
 
 # Trading pairs
@@ -23,12 +24,17 @@ e_time = datetime.time(16)
 now = datetime.datetime.now().time()
 
 # Trading interval
-trade_interval = interval.oneMinute
-trade_interval_refresh = 60 * 1
+trade_interval = interval.fifteenMinute
+trade_interval_refresh = 60 * 15
 # Activating the algorithm for the active time range
 activation_condition = ((s_time < now) and (now < e_time))
 
 # ===========================================================
+# RECORDING SESSION PNL
+db_name = 'orders_pnl.db'
+connection = sqlite3.connect(db_name)
+cursor = connection.cursor()
+
 
 while activation_condition==True:
 
@@ -57,6 +63,10 @@ while activation_condition==True:
             order_amount += 1
         # =================================
         
+        # ___TP and SL in pips___
+        take_profit = 35
+        stop_loss = -20
+
         # ======== Signal ==========
         s_ticker = signal(df)
         
@@ -74,7 +84,15 @@ while activation_condition==True:
                 print(f"CLOSING POSITION for {ticker}")
             # buy order
             try:
-                con.create_market_buy_order(ticker, order_amount)
+                con.open_trade(symbol=ticker, is_buy=True,
+                       is_in_pips=True,
+                       amount=order_amount, 
+                       order_type='AtMarket',
+                       time_in_force='GTC',
+                       limit=take_profit,
+                       stop=stop_loss,
+                       trailing_step =True
+                       )
                 print(f"Created BUY order for {ticker}: {order_amount}")
             except:
                 print(f"Buy Order failed for {ticker}")
@@ -87,7 +105,15 @@ while activation_condition==True:
                 print(f"CLOSING POSITION for {ticker}")
             # sell order
             try:
-                con.create_market_sell_order(ticker, order_amount)
+                con.open_trade(symbol=ticker, is_buy=False,
+                       is_in_pips=True,
+                       amount=order_amount, 
+                       order_type='AtMarket',
+                       time_in_force='GTC',
+                       limit=take_profit,
+                       stop=stop_loss,
+                       trailing_step =True
+                       )
                 print(f"Created SELL order for {ticker}: {order_amount}")
             except:
                 print(f"Sell Order failed for {ticker}")
@@ -102,9 +128,17 @@ while activation_condition==True:
             
     activation_condition = ((s_time < now) and (now < e_time))
     if activation_condition==True:
+        time_stamp = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        pnl = round(con.get_accounts().dayPL.iloc[0],0)
+        insert_into = f"INSERT INTO pnl (time,PnL) VALUES (?,?)"
+        cursor.execute(insert_into,(time_stamp,pnl))
         print()
-        print(f"Current PnL: {round(con.get_accounts().dayPL.iloc[0],0)}")
+        print(f"Current PnL: {pnl}")
         time.sleep(trade_interval_refresh)
+
+# Saving and Closing DB
+connection.commit()
+connection.close()
 
 print("Trading session over....")
 print("_________________________")
@@ -121,4 +155,6 @@ if len(active_pos)>0:
 else:
     print('No Positions to Close')
 
+
 con.close()
+print("Connection Closed...")

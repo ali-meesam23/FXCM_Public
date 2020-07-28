@@ -1,5 +1,5 @@
 from initialize import initialize_connection as con
-from  ohlcv import interval, ohlcv
+from ohlcv import interval, ohlcv
 from Signal import signal
 
 # Basic Imports
@@ -18,9 +18,20 @@ tickers = {
     'USD/CAD':30
 }
 
-# trading time
-s_time = datetime.time(6,30)
-e_time = datetime.time(16)
+# trading times
+start = input("Enter a start time HH:MM (24h.): ")
+end = input("Enter an end time HH:MM (24h.: ")
+s = start.split(":")
+e = end.split(":")
+if len(s)==2:
+    s_time = datetime.time(int(s[0]),int(s[1]))
+else:
+    s_time = datetime.time(7, 30)
+if len(e)==2:
+    e_time = datetime.time(int(e[0]),int(e[1]))
+else:
+    e_time = datetime.time(14, 30)
+
 now = datetime.datetime.now().time()
 
 # Trading interval
@@ -127,7 +138,8 @@ while activation_condition==True:
             print(f"No new positions open for {ticker}...")
             
     activation_condition = ((s_time < now) and (now < e_time))
-    if activation_condition==True:
+
+    if activation_condition:
         time_stamp = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         pnl = round(con.get_accounts().dayPL.iloc[0],0)
         insert_into = f"INSERT INTO pnl (time,PnL) VALUES (?,?)"

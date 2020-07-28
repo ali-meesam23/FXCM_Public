@@ -9,11 +9,15 @@ import sqlite3
 # =====================imput parameters=====================
 
 # Trading pairs
+
+
+ #   'XAU/USD':10,
+  #  'US30':20,
+   # 'AUD/USD':30,
+    #'GBP/USD':30,
+
 tickers = {
     'EUR/USD':30,
-    'XAU/USD':10,
-    'US30':20,
-    'AUD/USD':30,
     'GBP/USD':30,
     'USD/CAD':30
 }
@@ -52,7 +56,7 @@ while activation_condition==True:
     account = con.get_accounts()
     balance = account.balance
     positions = con.get_open_positions()
-    perc_total_balance = 1
+    perc_total_balance = 0.8
 
 
     for ticker in tickers:
@@ -75,7 +79,7 @@ while activation_condition==True:
         # =================================
         
         # ___TP and SL in pips___
-        take_profit = 35
+        take_profit = 80
         stop_loss = -20
 
         # ======== Signal ==========
@@ -136,7 +140,8 @@ while activation_condition==True:
             print(f"CLOSING POSITION for {ticker}")
         else:
             print(f"No new positions open for {ticker}...")
-            
+    
+    now = datetime.datetime.now().time()
     activation_condition = ((s_time < now) and (now < e_time))
 
     if activation_condition:
@@ -144,12 +149,13 @@ while activation_condition==True:
         pnl = round(con.get_accounts().dayPL.iloc[0],0)
         insert_into = f"INSERT INTO pnl (time,PnL) VALUES (?,?)"
         cursor.execute(insert_into,(time_stamp,pnl))
+        connection.commit()
         print()
         print(f"Current PnL: {pnl}")
         time.sleep(trade_interval_refresh)
 
 # Saving and Closing DB
-connection.commit()
+
 connection.close()
 
 print("Trading session over....")

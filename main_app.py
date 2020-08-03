@@ -56,7 +56,7 @@ while activation_condition==True:
     account = con.get_accounts()
     balance = account.balance
     positions = con.get_open_positions()
-    perc_total_balance = 0.8
+    perc_total_balance = 0.6
 
 
     for ticker in tickers:

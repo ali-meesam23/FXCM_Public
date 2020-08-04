@@ -9,7 +9,9 @@ import sqlite3
 # =====================imput parameters=====================
 
 # Trading pairs
-
+# tickers = {"currency":{"EUR/USD",'USD/CAD'},
+#            "index":{"US30"},
+#            "commodity":{"USOIL"}}
 
  #   'XAU/USD':10,
   #  'US30':20,

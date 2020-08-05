@@ -19,6 +19,7 @@ import sqlite3
     #'GBP/USD':30,
 
 tickers = {
+    
     'EUR/USD':30,
     'GBP/USD':30,
     'USD/CAD':30

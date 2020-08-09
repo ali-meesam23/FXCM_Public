@@ -16,7 +16,7 @@ def webhook():
     send(str(record))
     return jsonify("message: Successfully Posted")
 
-@app.route("/killserver", methods=['POST'])
+@app.route("/kill", methods=['GET'])
 def close_local():
     send("!DISCONNECTED")
     return "Local Server detached"

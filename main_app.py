@@ -27,7 +27,7 @@ tickers = {
 
 # trading times
 start = input("Enter a start time HH:MM (24h.): ")
-end = input("Enter an end time HH:MM (24h.: ")
+end = input("Enter an end time HH:MM (24h.): ")
 s = start.split(":")
 e = end.split(":")
 if len(s)==2:
